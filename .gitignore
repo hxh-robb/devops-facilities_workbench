@@ -1,0 +1,7 @@
+.out
+.release
+.jenkins
+
+*.swp
+
+modules/.profiles

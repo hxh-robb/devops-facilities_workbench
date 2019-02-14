@@ -1,0 +1,3 @@
+REGISTRY=robbtsang/
+LOG_DIR=./.logs
+DB_DIR=./.dbs

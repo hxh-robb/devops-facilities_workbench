@@ -12,5 +12,5 @@ cd "${DIR}"
 mkdir -p modules
 
 [ "${NAME_ONLY}" == "true" ] && \
-  git submodule status | awk -F' |/|\+' '{print $4}' 2>/dev/null || \
+  git submodule status | awk -F'\ |\/|\+' '{print $4}' 2>/dev/null || \
   git submodule status

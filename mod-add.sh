@@ -20,7 +20,7 @@ echo "==========================="
 test -z "${git_url}" && echo "Please input the git repo address:" || echo "git repo address:[${git_url}]"
 test -z "${git_url}" && read git_url
 
-mod=$(echo "${git_url}"|awk -F':|\/|\.git' '{print tolower($(NF-1))}')
+mod=$(echo "${git_url}"|awk -F'\:|\/|\.git' '{print tolower($(NF-1))}' 2>/dev/null)
 test -d modules/${mod} && echo "[${mod}] is already exists" && exit 1
 
 test -z "${git_branch}" && echo "Please input the branch to checkout:" || echo "git branch:[${git_branch}]"

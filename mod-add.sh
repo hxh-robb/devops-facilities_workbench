@@ -30,4 +30,4 @@ echo "==========================="
 git submodule add -b ${git_branch} ${git_url} modules/${mod}
 echo "==========================="
 
-test -x ./mod-dockerize.sh && ./mod-dockerize.sh modules/${mod}
+test -x ./mod-dockerize.sh && ./mod-dockerize.sh ${mod}

@@ -9,20 +9,24 @@ cd "${DIR}"
 ##############################
 ## Import Functions
 ##############################
-[ ! -f "func_dockerize.sh" ] && echo "[func_dockerize.sh] is missing, cannot perform module dockerizing!" && exit 1
-source ./func_dockerize.sh
+[ ! -f "mod-func/_dockerize.sh" ] && echo "[mod-func/_dockerize.sh] is missing, cannot perform module dockerizing!" && exit 1
+source mod-func/_dockerize.sh
 
 ##############################
 ## Parameters
 ##############################
-# TODO
-
+# TODO:--dry-run
 if [ $# -eq 0 ]; then
   mods=$(./mod-list.sh --name-only)
 else
   mods="$@"
 fi
 
+##############################
+## Performing dockerization
+##############################
+
 for mod in ${mods}; do
-  echo ${mod}
+  [ ! -d modules/${mod} ] && echo "[${mod}] does not exists" && continue
+  dockerize modules/${mod}
 done

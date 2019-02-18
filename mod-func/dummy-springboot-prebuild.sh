@@ -12,9 +12,18 @@ mkdir -p .devops-wb-dist
 touch .devops-wb/.settings
 touch .devops-wb/.ports
 touch .devops-wb/.paths
+touch .devops-wb/.name
+touch .devops-wb/.version
 
-mod_name=$(basename "${DIR}"|awk '{print tolower($0)}')
-mod_version='latest'
+[ -s .devops-wb/.name ] && \
+  mod_name=$(cat .devops-wb/.name)  || \
+  mod_name=$(basename "${DIR}")
+mod_name=$(echo "${mod_name}"|awk '{print tolower($0)}')
+
+[ -s .devops-wb/.version ] && \
+  mod_version=$(cat .devops-wb/.version)|| \
+  mod_version='latest' #TODO
+mod_version=$(echo "${mod_version}"|awk '{print tolower($0)}')
 
 tmp_envvar="/tmp/$(cat /proc/sys/kernel/random/uuid)"
 tmp_port="/tmp/$(cat /proc/sys/kernel/random/uuid)"
@@ -95,7 +104,8 @@ if [ -f "${tmp_envvar}" ]; then
   echo "=============================="
   echo "Generating [${target_cfg}]"
   echo "=============================="
-  mv -f "${tmp_envvar}" ${target_cfg}
+  #mv -f "${tmp_envvar}" ${target_cfg}
+  cp -f "${tmp_envvar}" ${target_cfg}
   cat ${target_cfg}
   echo ""
 fi
@@ -168,3 +178,5 @@ if [ -x .devops-wb/mod.sh ]; then
   cat .devops-wb-dist/.mods
   echo ""
 fi
+
+rm -f ${tmp_envvar} ${tmp_port} ${tmp_deployment}

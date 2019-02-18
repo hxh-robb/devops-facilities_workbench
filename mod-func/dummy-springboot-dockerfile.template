@@ -1,6 +1,6 @@
 FROM java:8-jdk
 ARG app_file=app.jar
-COPY .devops-wb-dist/$app_file /app/springboot-executable.jar
+COPY $app_file /app/springboot-executable.jar
 EXPOSE __$ports$__
 WORKDIR /app
 CMD /app/springboot-executable.jar

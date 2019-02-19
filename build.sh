@@ -47,8 +47,10 @@ touch .version
   starter_version='baseline'
 starter_tag="${starter_name}:${starter_version}"
 
-## starter scripts
-[ -n "$(ls "${SRC}")" ] && cp -f "${SRC}"/*.sh "${DIST}"
+## starter scripts & underlying configurations
+[ -n "$(ls "${SRC}"/*.sh)" ] && cp -f "${SRC}"/*.sh "${DIST}"
+[ -d "${SRC}/config" ] && cp -rf "${SRC}"/config "${DIST}/"
+[ -d "${SRC}/deployment" ] && cp -rf "${SRC}"/deployment "${DIST}/"
 
 ## starter [settings]
 target_settings="${DIST}/settings"

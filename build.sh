@@ -16,7 +16,7 @@ SKIP_UNCHANGED_MODS=false
 MODS=""
 for arg in $@; do
   [ "$arg" == "--skip-docker-push" ] && SKIP_DOCKER_PUSH=true && continue
-  [ "$arg" == "--skip-unchanged-mods" ] && SKIP_UNCHANGED_MOD=true && continue
+  [ "$arg" == "--skip-unchanged-mods" ] && SKIP_UNCHANGED_MODS=true && continue
   [[ "$arg" == "--"* ]] && continue
   MODS="$MODS $arg"
 done
@@ -52,9 +52,29 @@ starter_tag="${starter_name}:${starter_version}"
 
 ## starter [settings]
 target_settings="${DIST}/settings"
+echo "=============================="
+echo "Initial [${target_settings}]"
+echo "=============================="
+if [ ! -f "${DIST}/settings" ]; then
+  grep -vE "^\s*#.*" .settings > "${target_settings}"
+else
+  while read setting; do
+    setting_key=$(echo "${setting}"|awk -F'=' '{print $1}')
+    setting_val=$(echo "${setting}"|awk -F'=' '{print substr($0, index($0,$2))}')
 
-grep -vE "^\s*#.*" .settings > "${target_settings}"
+    if [ $(grep -cE "^${setting_key}=.*" "${target_settings}") -eq 0 ]; then
+      echo "Appending [${setting_key}]=[${setting_val}]"
+      echo "${setting_key}=${setting_val}" >> "${target_settings}" 
+    else
+      echo "[${setting_key}] is listed in [${target_settings}] already!"
+    fi
+  done <<< "$(grep -vE "^\s*#.*$" .settings)"
+  echo "$(cat "${target_settings}" | grep -vE "STARTER_TAG=.+")" > "${target_settings}"
+  echo "------------------------------"
+fi
 echo "STARTER_TAG=${starter_tag}" >> "${target_settings}"
+cat "${target_settings}"
+echo ""
 
 ## loop over the [modules/] folders
 for mod_dir in modules/*; do
@@ -77,9 +97,14 @@ for mod_dir in modules/*; do
         MODS=${MODS%% }
         MODS=${MODS## }
       fi
-    done <<< $("${mod_dir}"/.devops-wb/mod.sh)
+    done <<< "$("${mod_dir}"/.devops-wb/mod.sh)"
   elif [ "${SKIP_UNCHANGED_MODS}" == "true" ]; then
-    echo "TODO:UPDATED"
+    while read mod_info; do
+      if [ $(grep -cE "^${mod_info}$" "${DIST}/mods") -eq 0 ]; then
+        build_cmd="build.sh"
+        break;
+      fi
+    done <<< "$("${mod_dir}"/.devops-wb/mod.sh)"
   else
     build_cmd="build.sh"
   fi
@@ -127,7 +152,7 @@ for mod_dir in modules/*; do
         else
           echo "Skip:[${mod_info}]:no changed!"
         fi
-      done <<< $(cat "${mod_dir}"/.devops-wb-dist/.mods)
+      done <<< "$(cat "${mod_dir}"/.devops-wb-dist/.mods)"
       
       echo '------------[mods]------------'
       cat "${DIST}/mods"
@@ -152,7 +177,7 @@ for mod_dir in modules/*; do
         else
           echo "[${setting_key}] is listed in [${DIST}/settings] already!"
         fi
-      done <<< $(grep -vE "^\s*#.*$" "${mod_dir}"/.devops-wb-dist/.settings)
+      done <<< "$(grep -vE "^\s*#.*$" "${mod_dir}"/.devops-wb-dist/.settings)"
     
       echo '----------[settings]----------'
       cat "${DIST}/settings"

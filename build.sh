@@ -48,7 +48,7 @@ touch .version
 starter_tag="${starter_name}:${starter_version}"
 
 ## starter scripts & underlying configurations
-[ -n "$(ls "${SRC}"/*.sh)" ] && cp -f "${SRC}"/*.sh "${DIST}"
+[ -n "$(ls "${SRC}"/*.sh 2>/dev/null)" ] && cp -f "${SRC}"/*.sh "${DIST}"
 [ -d "${SRC}/config" ] && cp -rf "${SRC}"/config "${DIST}/"
 [ -d "${SRC}/deployment" ] && cp -rf "${SRC}"/deployment "${DIST}/"
 
@@ -185,6 +185,7 @@ for mod_dir in modules/*; do
       cat "${DIST}/settings"
       echo ""
     fi
+
     ## starter [deployment/]
     [ -d "${mod_dir}"/.devops-wb-dist/deployment ] && \
       cp -rf  "${mod_dir}"/.devops-wb-dist/deployment "${DIST}/"

@@ -40,7 +40,7 @@ echo ""
 find . -type f -perm /a+x -name *.jar \
   -not -name maven-wrapper.jar -and -not -path "./.devops-wb-dist/*" \
   -exec cp -f {} "${target_jar}"  \;
-docker build -f "${CMD_DIR}/Dockerfile" --build-arg app_file="${target_jar}" . -t "${mod_name}:${mod_version}"
+docker build -f "${CMD_DIR}/Dockerfile" --build-arg app_file="${target_jar}" --build-arg mod_file="$(basename "${DIST}")/.mods" . -t "${mod_name}:${mod_version}"
 
 [ "${mod_version}" != "latest" ] && docker tag "${mod_name}:${mod_version}" "${mod_name}:latest-release"
 echo "latest" > .devops-wb/.version

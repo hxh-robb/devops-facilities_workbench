@@ -1,6 +1,8 @@
 FROM java:8-jdk
 ARG app_file=app.jar
+ARG mod_file=mod
 COPY $app_file /app/springboot-executable.jar
+COPY $mod_file /app/mod
 EXPOSE __$ports$__
 WORKDIR /app
 CMD /app/springboot-executable.jar

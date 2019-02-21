@@ -75,10 +75,19 @@ else
   echo "------------------------------"
 fi
 echo "STARTER_TAG=${starter_tag}" >> "${target_settings}"
+export $(grep -E "^REGISTRY=.+$" "${target_settings}")
 cat "${target_settings}"
 echo ""
 
 ## loop over the [modules/] folders
+t1=$(date +"%Y-%m-%d %H:%M:%S %z %:::z")
+
+building_log=/tmp/$(cat /proc/sys/kernel/random/uuid)
+built_images=/tmp/$(cat /proc/sys/kernel/random/uuid)
+
+#touch "${building_log}"
+#touch "${built_images}"
+
 for mod_dir in modules/*; do
   grep -Fxq "${mod_dir}" .modignore && continue;
   
@@ -116,7 +125,13 @@ for mod_dir in modules/*; do
     echo "*************** [${mod_dir}] ***************"
     echo ""
 
-    "${build_cmd}" || exit 1
+    type tee >/dev/null 2>&1
+    if [ $? == 1 ]; then
+      "${build_cmd}" || exit 1
+    else
+      "${build_cmd}" | tee "${building_log}" || exit 1
+      cat "${building_log}"|grep -E "^Successfully\stagged\s.+\:.+"|awk '{print $3}' >>"${built_images}" 
+    fi
 
     ## starter [mods]
     if [ -f "${mod_dir}"/.devops-wb-dist/.mods ]; then
@@ -200,3 +215,30 @@ for mod_dir in modules/*; do
   fi
 done
 
+## docker tag & docker push
+docker images --filter "dangling=false" --format "{{.Repository}}:{{.Tag}},{{.CreatedAt}}"|\
+  while read image_info; do
+    image_label="$(echo ${image_info}|awk -F',' '{print $1}')"
+    t2=$(echo ${image_info}|awk -F',' '{print $2}')
+
+    if [[ "${t2}" > "${t1}" ]]; then
+      echo "=============================="
+      echo "Post-build docker image:[${image_info}]"
+      echo "=============================="
+      
+      if [ -f "${built_images}" ]; then
+        [ $(grep -cE "^${image_label}$" "${built_images}") -eq 0 ] && continue
+      fi
+      
+      if [ -n "${REGISTRY}" ]; then
+        registry_image_label="${REGISTRY}${image_label}"
+        docker tag "${image_label}" "${registry_image_label}"
+        [ "${SKIP_DOCKER_PUSH}" == "false" ] && docker push "${registry_image_label}"
+      fi
+
+      echo ""
+    fi
+  done
+
+rm -f "${building_log}"
+rm -f "${built_images}"

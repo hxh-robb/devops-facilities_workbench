@@ -216,7 +216,11 @@ for mod_dir in modules/*; do
 done
 
 ## build starter docker image
-docker build -t "${starter_tag}"
+echo "=============================="
+echo "Build docker image:[${starter_tag}]"
+echo "=============================="
+docker build . -t "${starter_tag}"
+echo ""
 
 ## docker tag & docker push
 docker images --filter "dangling=false" --format "{{.Repository}}:{{.Tag}},{{.CreatedAt}}"|\

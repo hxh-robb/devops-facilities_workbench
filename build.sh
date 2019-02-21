@@ -79,7 +79,7 @@ export $(grep -E "^REGISTRY=.+$" "${target_settings}")
 cat "${target_settings}"
 echo ""
 
-## loop over the [modules/] folders
+## loop over the [modules/*] folders
 t1=$(date +"%Y-%m-%d %H:%M:%S %z %:::z")
 
 building_log=/tmp/$(cat /proc/sys/kernel/random/uuid)
@@ -214,6 +214,9 @@ for mod_dir in modules/*; do
     echo ""
   fi
 done
+
+## build starter docker image
+docker build -t "${starter_tag}"
 
 ## docker tag & docker push
 docker images --filter "dangling=false" --format "{{.Repository}}:{{.Tag}},{{.CreatedAt}}"|\

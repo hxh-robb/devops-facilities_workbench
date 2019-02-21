@@ -134,7 +134,7 @@ for mod_dir in modules/*; do
     fi
 
     ## starter [mods]
-    if [ -f "${mod_dir}"/.devops-wb-dist/.mods ]; then
+    if [ -s "${mod_dir}"/.devops-wb-dist/.mods ]; then
       echo "=============================="
       echo "Merging [.mods] to [mods]"
       echo "=============================="
@@ -177,7 +177,7 @@ for mod_dir in modules/*; do
     fi
 
     ## starter [settings]
-    if [ -f "${mod_dir}"/.devops-wb-dist/.settings ]; then
+    if [ -s "${mod_dir}"/.devops-wb-dist/.settings ]; then
       echo "=============================="
       echo "Merging [.settings] to [settings]"
       echo "=============================="

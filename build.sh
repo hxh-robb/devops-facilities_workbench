@@ -219,7 +219,10 @@ done
 echo "=============================="
 echo "Build docker image:[${starter_tag}]"
 echo "=============================="
+set -e
 docker build . -t "${starter_tag}"
+echo "${starter_tag}" >> "${built_images}"
+set +e
 echo ""
 
 ## docker tag & docker push

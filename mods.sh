@@ -9,6 +9,9 @@ cd "${DIR}"
 
 [ -x mod-update.sh ] && ./mod-update.sh
 
+mkdir -p "${DIST}"
+touch "${DIST}/mods"
+
 for mod_dir in modules/*; do
   grep -Fxq "${mod_dir}" .modignore && continue;
   

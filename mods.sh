@@ -11,6 +11,7 @@ cd "${DIR}"
 
 mkdir -p "${DIST}"
 touch "${DIST}/mods"
+tmp=/tmp/$(cat /proc/sys/kernel/random/uuid)
 
 for mod_dir in modules/*; do
   grep -Fxq "${mod_dir}" .modignore && continue;
@@ -23,14 +24,14 @@ for mod_dir in modules/*; do
     echo "*************** [${mod_dir}] ***************"
     echo ""
 
-    "${build_cmd}" || exit 1
+    "${build_cmd}" > ${tmp}
 
     ## starter [mods]
-    if [ -s "${mod_dir}"/.devops-wb-dist/.mods ]; then
+    if [ -s ${tmp} ]; then
       echo "=============================="
       echo "Merging [.mods] to [mods]"
       echo "=============================="
-      echo ".mods = [${mod_dir}/.devops-wb-dist/.mods]"
+      echo ".mods = [${tmp}]"
       echo "mods = [${DIST}/mods]"
       echo '------------------------------'
       
@@ -61,7 +62,7 @@ for mod_dir in modules/*; do
         else
           echo "Skip:[${mod_info}]:no changed!"
         fi
-      done <<< "$(cat "${mod_dir}"/.devops-wb-dist/.mods)"
+      done <<< "$(cat "${tmp})"
       
       echo '------------[mods]------------'
       cat "${DIST}/mods"
@@ -73,3 +74,5 @@ for mod_dir in modules/*; do
     echo ""
   fi
 done
+
+rm -f ${tmp}

@@ -62,7 +62,7 @@ for mod_dir in modules/*; do
         else
           echo "Skip:[${mod_info}]:no changed!"
         fi
-      done <<< "$(cat "${tmp})"
+      done <<< "$(cat "${tmp}")"
       
       echo '------------[mods]------------'
       cat "${DIST}/mods"

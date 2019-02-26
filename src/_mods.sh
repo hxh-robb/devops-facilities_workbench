@@ -23,9 +23,14 @@ refresh_mods_file(){
   [ -f "${mods_file}" ] && mv -f "${mods_file}" "${mods_history}/$(basename "${mods_file}").${TS}"
   cp /dev/null "${mods_file}"
   if [ -x ./cmd.sh ]; then
-    while read service; do
+#    while read service; do
+#      ./cmd.sh run --rm ${service} cat /app/mod 2>/dev/null >> "${mods_file}"
+#    done<<< "$(./cmd.sh ps --services 2>/dev/null)"
+
+    actual_mods="$(./cmd.sh ps --services 2>/dev/null)"
+    for service in ${actual_mods[@]}; do
       ./cmd.sh run --rm ${service} cat /app/mod 2>/dev/null >> "${mods_file}"
-    done<<< "$(./cmd.sh ps --services 2>/dev/null)"
+    done
   fi
   
   prompt "$(cat "${mods_file}")"

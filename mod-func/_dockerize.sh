@@ -47,6 +47,7 @@ dockerize(){
     cp "$DIR"/mod-func/dummy-springboot-build.sh .devops-wb/build.sh
     cp "$DIR"/mod-func/dummy-springboot-dockerfile.template .devops-wb/dockerfile.template
     cp "$DIR"/mod-func/dummy-springboot-deployment.template .devops-wb/deployment.template
+    echo "$(git log --pretty="%H" -n 1)" > .devops-wb/.wb-version
     chmod a+x .devops-wb/*.sh
   fi
 

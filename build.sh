@@ -7,6 +7,8 @@ SRC="${DIR}/src"
 DIST="${DIR}/dist"
 cd "${DIR}"
 
+[ -x mod-dockerize.sh ] && ./mod-dockerize.sh
+
 ####################################
 ## Parameters
 #rm -rf "${DIST}" #TODO:git tag/skip docker push/etc ..

@@ -7,7 +7,13 @@ SRC="${DIR}/src"
 DIST="${DIR}/dist"
 cd "${DIR}"
 
-[ -x mod-dockerize.sh ] && ./mod-dockerize.sh
+if [ -x mod-dockerize.sh ]; then
+  echo "=============================="
+  echo "mod-dockerize.sh"
+  echo "=============================="
+  ./mod-dockerize.sh
+  echo ""
+fi
 
 ####################################
 ## Parameters

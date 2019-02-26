@@ -113,7 +113,7 @@ if [ -f "${tmp_envvar}" ]; then
   echo ""
   
   ## Merging custom env-var
-  if [ -s .devops-wb/.cfg]; then
+  if [ -s .devops-wb/.cfg ]; then
     [ ! -f "${target_cfg}" ] && touch "${target_cfg}"
     echo "=============================="
     echo "Merging [.cfg] to [${target_cfg}]"

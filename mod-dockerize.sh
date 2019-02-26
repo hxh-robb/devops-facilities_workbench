@@ -26,7 +26,7 @@ fi
 ## Performing dockerization
 ##############################
 
-for mod in ${mods}; do
+for mod in $(echo "${mods}"); do
   [ ! -d modules/${mod} ] && echo "[${mod}] does not exists" && continue
   dockerize modules/${mod}
 done

@@ -133,7 +133,7 @@ if [ -f "${tmp_envvar}" ]; then
         echo "${envvar_key}=${envvar_val}" >> "${target_cfg}"
       else
         echo "Replacing [${envvar_key}]"
-        echo "Old line = [$(grep -cE "^${envvar_key}=.*" "${target_cfg}")]"
+        echo "Old line = [$(grep -E "^${envvar_key}=.*" "${target_cfg}")]"
         echo "New line = [${envvar_key}=${envvar_val}]"
         cat "${target_cfg}"|grep -v "${envvar_key}=" > "${target_cfg}.tmp"
         mv "${target_cfg}.tmp" "${target_cfg}"

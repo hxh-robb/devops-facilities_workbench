@@ -174,8 +174,10 @@ elif [ -f "${deployment_tpl}" ]; then
     awk '{print "      - "$0}' .devops-wb/.ports > "${tmp_deployment}"
   fi
   ports_replacement="${tmp_deployment}"
-  if [ -f ${ports_replacement} ]; then
+  if [ -s ${ports_replacement} ]; then
     sed -i "/${ports_placeholder}/r ${ports_replacement}" "${target_deployment}"
+  else
+    sed -i "s/ports:/ports: []/g" "${target_deployment}"
   fi
   sed -i "/${ports_placeholder}/d" "${target_deployment}"
   

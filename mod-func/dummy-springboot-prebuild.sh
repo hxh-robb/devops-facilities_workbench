@@ -131,12 +131,15 @@ if [ -f "${tmp_envvar}" ]; then
         echo "${envvar_key}=${envvar_val}" >> "${target_cfg}"
       else
         echo "Replacing [${envvar_key}]"
-        echo "Old value = [$(grep -cE "^${envvar_key}=.*" "${target_cfg}"|awk -F'=' '{print substr($0, index($0,$2))}')]"
-        echo "New value = [${envvar_val}]"
+        echo "Old line = [$(grep -cE "^${envvar_key}=.*" "${target_cfg}")]"
+        echo "New line = [${envvar_key}=${envvar_val}]"
         echo "TODO:Replacing [${envvar_key}]"
+        cat "${target_cfg}"|grep -v "${envvar_key}=" > "${target_cfg}.tmp"
+        mv "${target_cfg}.tmp" "${target_cfg}"
+        echo "${envvar_key}=${envvar_val}" >> "${target_cfg}"
         #echo "[${setting_key}] is listed in [${DIST}/settings] already!"
       fi
-    done <<< "$(grep -vE "^\s*#.*$" ./devops-wb/.cfg)"
+    done <<< "$(grep -vE "^\s*#.*$" .devops-wb/.cfg)"
     echo "----------[after merging:${target_cfg}]----------"
     cat "${target_cfg}"
     echo ""

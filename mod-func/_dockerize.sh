@@ -56,7 +56,8 @@ dockerize(){
 
 leave(){
   cd "$DIR"
-  exit $1
+  #exit $1
+  return $1
 }
 
 ## Try to recognize 

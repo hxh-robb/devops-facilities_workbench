@@ -95,7 +95,9 @@ if [ -f "${tmp_port}" ] && [ -f "${dockerfile_tpl}" ]; then
   echo "=============================="
   echo "Generating [${target_dockerfile}]"
   echo "=============================="
-  cat "${dockerfile_tpl}"|sed "s/${ports_placeholder}/$(cat "${tmp_port}")/g" > "${target_dockerfile}"
+  docker_exposed_ports=$(cat "${tmp_port}")
+  docker_exposed_ports=$(echo ${docker_exposed_ports})
+  cat "${dockerfile_tpl}"|sed "s/${ports_placeholder}/${docker_exposed_ports}/g" > "${target_dockerfile}"
   cat "${target_dockerfile}"
   echo ""
 fi
@@ -133,11 +135,9 @@ if [ -f "${tmp_envvar}" ]; then
         echo "Replacing [${envvar_key}]"
         echo "Old line = [$(grep -cE "^${envvar_key}=.*" "${target_cfg}")]"
         echo "New line = [${envvar_key}=${envvar_val}]"
-        echo "TODO:Replacing [${envvar_key}]"
         cat "${target_cfg}"|grep -v "${envvar_key}=" > "${target_cfg}.tmp"
         mv "${target_cfg}.tmp" "${target_cfg}"
         echo "${envvar_key}=${envvar_val}" >> "${target_cfg}"
-        #echo "[${setting_key}] is listed in [${DIST}/settings] already!"
       fi
     done <<< "$(grep -vE "^\s*#.*$" .devops-wb/.cfg)"
     echo "----------[after merging:${target_cfg}]----------"

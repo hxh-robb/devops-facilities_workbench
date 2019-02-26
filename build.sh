@@ -157,7 +157,8 @@ for mod_dir in modules/*; do
           [ $(grep -cE "^${mod_name}\s${mod_commit}$" "${DIST}/mods") -eq 0 ]; \
           then
           echo "Replacing:From [$(grep -oE "^${mod_name}\s.*$" "${DIST}/mods")] to [${mod_info}]"
-          cat "${DIST}/mods" | grep -vE "^${mod_name}\s.*$" > "${DIST}/mods"
+          cat "${DIST}/mods" | grep -vE "^${mod_name}\s.*$" > "${DIST}/.mods"
+          mv "${DIST}/.mods" "${DIST}/mods"
           echo "${mod_info}" >> "${DIST}/mods"
         elif [ $(grep -cE "^${mod_name}\s.*$" "${DIST}/mods") -gt 1 ]; then
           echo "***** Unexpected mods content *****"

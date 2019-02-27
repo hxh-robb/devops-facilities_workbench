@@ -7,7 +7,7 @@ for arg in $@; do
     elif [ -z "$git_branch" ]; then
       git_branch="$arg"
     elif [ -z "$mod_name" ]; then
-      mod_name="$arg
+      mod_name="$arg"
     fi
   fi
 done

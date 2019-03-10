@@ -1,0 +1,18 @@
+version: "3"
+services:
+  __$name$__:
+    image: "${REGISTRY}__$name$__:__$version$__"
+    restart: unless-stopped
+    env_file:
+      - ../config/all.cfg
+      - ../config/java.cfg
+      - ../config/__$name$__.cfg
+    ports:
+__$ports$__
+    volumes:
+      - "../timezone:/etc/timezone"
+__$paths$__
+    cap_add:
+      - SYS_PTRACE
+    networks:
+      - backend

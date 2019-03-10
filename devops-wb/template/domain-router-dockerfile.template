@@ -1,0 +1,9 @@
+FROM nginx:1.15
+ARG app_file=app.tar.gz
+ARG mod_file=mod
+ADD $app_file /domain-router
+COPY $mod_file /app/mod
+RUN test -f /etc/nginx/nginx.conf && mv /etc/nginx/nginx.conf /etc/nginx/nginx.conf.bak
+RUN ln -s /domain-router/nginx.conf /etc/nginx/
+EXPOSE 80
+WORKDIR /domain-router

@@ -1,0 +1,8 @@
+FROM nginx:1.15
+ARG app_file=app.tar.gz
+ARG mod_file=mod
+ADD $app_file /app
+COPY $mod_file /app/mod
+RUN mv -f /app/nginx.conf /etc/nginx/
+EXPOSE 80
+WORKDIR /app

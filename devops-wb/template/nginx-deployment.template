@@ -1,0 +1,13 @@
+version: "3"
+services:
+  __$name$__:
+    image: "${REGISTRY}__$name$__:__$version$__"
+    restart: unless-stopped
+    volumes:
+      - "../timezone:/etc/timezone"
+    ports:
+__$ports$__
+    networks:
+      - backend
+      - frontend
+
